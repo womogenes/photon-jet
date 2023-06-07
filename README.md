@@ -8,7 +8,7 @@ Paper: https://arxiv.org/abs/1810.05165
 
 Currently working on cleaning up these files so that it's simple Python files instead of Jupyter notebooks.
 
-All relevant code is in `scalar_test/pfn_test/`.
+All relevant code is in `models/pfn/'.
 
 ### Requirements
 
@@ -23,25 +23,28 @@ The code is tested on Linux.
 
 ### Data preprocessing
 
-Currently assumes the data lives in `/usatlas/atlas01/atlasdisk/users/atlas_wifeng/photon-jet/data/processed/scalar_test`; easily editable in the notebook file under the "Grab data" heading.
+Within `<data_dir>`, we need a subdirectory called `h5` that contains the following files:
 
-Required files in this directory:
+1. `pi0_40-250GeV_100k.h5`
+2. `gamma_40-250GeV_100k.h5`
+3. `scalar1_40-250GeV_100k.h5`
 
-1. `pi0_40-250GeV_100k.npz`
-2. `gamma_40-250GeV_100k.npz`
-3. `scalar1_40-250GeV_100k.npz`
+**First**, run `h5_to_npz.py` to convert all these to `.npz` files. These will now live in `<data_dir>/npz`.
 
-Run this file; it'll save to `all_jets_point_cloud.npz` in the directory specified above.
+**Second**, `models/pfn/scalar/scalar_preprocessing.py` handles preprocessing of the numpy data (transforms calorimetry images into point clouds). One of the first lines in this file sets the `data_dir` variable; modify as appropriate.
+
+Now run `models/pfn/scalar/scalar_preprocessing.py`; it'll save to `<data_dir>/preprocessed/all_jets_point_cloud.npz`, which now contains
+1. the training data `X`, of shape `(300000, 960, 4)` (300k examples, 960 points per jet, 4 features per point)
+2. the training labels `y`, of shape `(300000, 3)` which are one-hot encoded vectors of the label. (`0` - pion, `1` - photon, `2` - scalar)
 
 ### Training and testing the model
 
-Run `scalar_test/pfn_test/pfn_test.ipynb` as a notebook.
+Run `scalar_test/pfn/scalar/scalar_main.ipynb` as a notebook.
 
-There are cells under the "Compile and train the model" heading that have learning rate and epoch # settings. My recipe for obtaining the 97% accuracy model:
+The `train_iteration` function allows one to train the model within a specified learning rate for a specified number of epochs. My recipe for obtaining the 97% accuracy model:
 
 1. Train with lr=2e-4 for 45 epochs (should get to >80% val accuracy)
 2. Train with lr=2e-5 for 45 epochs (should get to >90% val accuracy)
 3. Train with lr=2e-6 for 30 epochs
 
 This took about two hours on an Nvidia P100 GPU.
-
