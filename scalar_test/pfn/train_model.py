@@ -23,10 +23,9 @@ def train_model(model, data,
         metrics=["accuracy"]
     )
     fit_history = model.fit(X_train, Y_train,
-                        epochs=epochs,
-                        batch_size=batch_size,
-                        validation_data=(X_val, Y_val),
-                        verbose=verbose)
+                            epochs=epochs,
+                            batch_size=batch_size,
+                            validation_data=(X_val, Y_val),
+                            verbose=verbose)
     
     return fit_history
-    
