@@ -36,7 +36,7 @@ model = PFN(
     n_outputs=Y_train.shape[1],
     Phi_sizes=Phi_sizes,
     F_sizes=F_sizes
-)    
+)
 
 
 # Train the model

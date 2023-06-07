@@ -1,4 +1,6 @@
 print(f"Importing computational stuff...")
+import sys; sys.path.append("..")
+
 import os
 import time
 import h5py
@@ -13,17 +15,15 @@ print(f"Importing utilities...")
 from utils import convert_size
 
 
-# Preprocessing for the PFN model
-
 # ~5 sec
 print(f"Loading datasets... (~5 sec)")
 
-data_dir = "/usatlas/atlas01/atlasdisk/users/atlas_wifeng/photon-jet/data/processed/scalar_test"
-os.chdir(data_dir)
+data_dir = "/usatlas/atlas01/atlasdisk/users/atlas_wifeng/photon-jet/data"
 
+os.chdir(f"{data_dir}/raw_files/npz")
 raw_pions = dict(np.load("pi0_40-250GeV_100k.npz"))
 raw_photons = dict(np.load("gamma_40-250GeV_100k.npz"))
-raw_scalars = dict(np.load("scalar1_40-250GeV_100k.npz"))
+raw_axion1s = dict(np.load("axion1_40-250GeV_100k.npz"))
 
 def norm_coords(n):
     """
@@ -72,7 +72,7 @@ def process_dataset(dataset):
     return np.concatenate(res, axis=1)
 
 print(f"Processing all datasets...")
-raw_datasets = {"pions": raw_pions, "photons": raw_photons, "scalars": raw_scalars}
+raw_datasets = {"pions": raw_pions, "photons": raw_photons, "axion1s": raw_axion1s}
 processed = {}
 
 for class_type, dataset in raw_datasets.items():
@@ -95,4 +95,5 @@ print(f"All jets take up {convert_size(all_jets.nbytes)}")
 
 # ~10 sec
 print(f"Saving jets... (~10 sec)")
+os.chdir(f"{data_dir}/processed/axion1_test")
 np.savez(f"all_jets_point_cloud.npz", X=all_jets, y=labels)

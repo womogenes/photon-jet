@@ -16,7 +16,7 @@ from energyflow.utils import data_split, to_categorical
 # ~10 sec
 def get_data(dataset):
     disk_dir = "/usatlas/atlas01/atlasdisk/users/atlas_wifeng"
-    data_dir = "photon-jet/data/processed/scalar_test"
+    data_dir = "photon-jet/data/processed"
     jets_path = f"{disk_dir}/{data_dir}/{dataset}"
     jets = np.load(jets_path)
     
