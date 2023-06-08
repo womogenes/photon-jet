@@ -4,10 +4,11 @@ import os
 import numpy as np
 from pathlib import Path
 import h5py
+import yaml
 
 from tqdm import tqdm
 
-data_dir = "/usatlas/atlas01/atlasdisk/users/atlas_wifeng/photon-jet/data/raw_files"
+data_dir = yaml.safe_load("./config.yaml")["data_dir"]
 h5_dir = f"{data_dir}/h5"
 np_dir = f"{data_dir}/npz"
 

@@ -12,12 +12,13 @@ import os
 import numpy as np
 from utils import convert_size
 from energyflow.utils import data_split, to_categorical
+import yaml
 
 # ~10 sec
 def get_data(dataset):
-    disk_dir = "/usatlas/atlas01/atlasdisk/users/atlas_wifeng"
-    data_dir = "photon-jet/data/processed"
-    jets_path = f"{disk_dir}/{data_dir}/{dataset}"
+    with open(os.path.join(os.path.dirname(__file__), "config.yaml")) as fin:
+        data_dir = yaml.safe_load(fin)["data_dir"]
+    jets_path = f"{data_dir}/{dataset}"
     jets = np.load(jets_path)
     
     X, y = jets["X"], jets["y"]

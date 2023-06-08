@@ -6,8 +6,6 @@ Paper: https://arxiv.org/abs/2203.16703
 
 Paper: https://arxiv.org/abs/1810.05165
 
-Currently working on cleaning up these files so that it's simple Python files instead of Jupyter notebooks.
-
 All relevant code is in `models/pfn/'.
 
 ### Requirements
@@ -23,23 +21,40 @@ The code is tested on Linux.
 
 ### Data preprocessing
 
-All existing data files should be stored in a directory called `<data_dir>`. Data preprocessing will use the files in this directory and will also write new files to the directory. Here's what we need: within `<data_dir>`, put a subdirectory called `h5` that contains the following files:
+Edit the paths in `/models/pfn/config.yaml` to point to the correct data and model directories. The variable `data_dir` should contain the path to a directory that **already** has the following structure:
 
-1. `pi0_40-250GeV_100k.h5`
-2. `gamma_40-250GeV_100k.h5`
-3. `scalar1_40-250GeV_100k.h5`
+```
+h5/
+  - `pi0_40-250GeV_100k.h5`
+  - `gamma_40-250GeV_100k.h5`
+  - `scalar1_40-250GeV_100k.h5`
+```
 
-**First**, modify `h5_to_npz.py` and replace `data_dir = /usatlas/...` with the correct directory as described above. Then, run the file to convert everthing in `<data_dir>/h5` to `.npz` files. These will now live in `<data_dir>/npz`.
+After we're done with the two preprocessing steps, the folder `data_dir` should look like this:
 
-**Second**, `models/pfn/scalar/scalar_preprocessing.py` handles preprocessing of the numpy data (transforms calorimetry images into point clouds). One line in this file sets the `data_dir` variable; again, modify as appropriate.
+```
+h5/
+  - `pi0_40-250GeV_100k.h5`
+  - `gamma_40-250GeV_100k.h5`
+  - `scalar1_40-250GeV_100k.h5`
+npz/
+  - `pi0_40-250GeV_100k.npz`
+  - `gamma_40-250GeV_100k.npz`
+  - `scalar1_40-250GeV_100k.npz`
+processed/
+  scalars/
+      - `all_jets_point_cloud.npz`
+```
 
-Now run `models/pfn/scalar/scalar_preprocessing.py`; it'll save to `<data_dir>/preprocessed/all_jets_point_cloud.npz`, which now contains
+**First**, run `h5_to_npz.py`. This will turn all `.h5` files in `<data_dir>/h5` into `.npz` files in `<data_dir>/npz`. (Folder will be automatically created.)
+
+**Second**, run `models/pfn/scalar/scalar_preprocessing.py`. This will preprocess of the numpy data (transforms calorimeter images into point clouds). It'll write a file (8.6 GB) to `<data_dir>/preprocessed/all_jets_point_cloud.npz`, which now contains
 1. the training data `X`, of shape `(300000, 960, 4)` (300k examples, 960 points per jet, 4 features per point)
 2. the training labels `y`, of shape `(300000, 3)` which are one-hot encoded vectors of the label. (`0` - pion, `1` - photon, `2` - scalar)
 
 ### Training and testing the model
 
-Run `scalar_test/pfn/scalar/scalar_main.ipynb` as a notebook. There's a `data_dir` in here that needs to be modified as before. (I should really put this into some config file later)
+Run `scalar_test/pfn/scalar/scalar_main.ipynb` as a notebook.
 
 The `train_iteration` function allows one to train the model within a specified learning rate for a specified number of epochs. My recipe for obtaining the 97% accuracy model:
 
