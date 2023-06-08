@@ -23,15 +23,15 @@ The code is tested on Linux.
 
 ### Data preprocessing
 
-Within `<data_dir>`, we need a subdirectory called `h5` that contains the following files:
+All existing data files should be stored in a directory called `<data_dir>`. Data preprocessing will use the files in this directory and will also write new files to the directory. Here's what we need: within `<data_dir>`, put a subdirectory called `h5` that contains the following files:
 
 1. `pi0_40-250GeV_100k.h5`
 2. `gamma_40-250GeV_100k.h5`
 3. `scalar1_40-250GeV_100k.h5`
 
-**First**, run `h5_to_npz.py` to convert all these to `.npz` files. These will now live in `<data_dir>/npz`.
+**First**, modify `h5_to_npz.py` and replace `data_dir = /usatlas/...` with the correct directory as described above. Then, run the file to convert everthing in `<data_dir>/h5` to `.npz` files. These will now live in `<data_dir>/npz`.
 
-**Second**, `models/pfn/scalar/scalar_preprocessing.py` handles preprocessing of the numpy data (transforms calorimetry images into point clouds). One of the first lines in this file sets the `data_dir` variable; modify as appropriate.
+**Second**, `models/pfn/scalar/scalar_preprocessing.py` handles preprocessing of the numpy data (transforms calorimetry images into point clouds). One line in this file sets the `data_dir` variable; again, modify as appropriate.
 
 Now run `models/pfn/scalar/scalar_preprocessing.py`; it'll save to `<data_dir>/preprocessed/all_jets_point_cloud.npz`, which now contains
 1. the training data `X`, of shape `(300000, 960, 4)` (300k examples, 960 points per jet, 4 features per point)
@@ -39,12 +39,12 @@ Now run `models/pfn/scalar/scalar_preprocessing.py`; it'll save to `<data_dir>/p
 
 ### Training and testing the model
 
-Run `scalar_test/pfn/scalar/scalar_main.ipynb` as a notebook.
+Run `scalar_test/pfn/scalar/scalar_main.ipynb` as a notebook. There's a `data_dir` in here that needs to be modified as before. (I should really put this into some config file later)
 
 The `train_iteration` function allows one to train the model within a specified learning rate for a specified number of epochs. My recipe for obtaining the 97% accuracy model:
 
 1. Train with lr=2e-4 for 45 epochs (should get to >80% val accuracy)
 2. Train with lr=2e-5 for 45 epochs (should get to >90% val accuracy)
-3. Train with lr=2e-6 for 30 epochs
+3. Train with lr=2e-6 for 30 epochs (should get to ~97% val accuracy)
 
-This took about two hours on an Nvidia P100 GPU.
+Training took about two hours on an Nvidia P100 GPU.
