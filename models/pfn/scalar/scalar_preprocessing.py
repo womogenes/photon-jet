@@ -6,21 +6,19 @@ import time
 import h5py
 import numpy as np
 import math
+import yaml
 
 print(f"Importing display stuff...")
 from tqdm import tqdm, trange
 from pprint import pprint
 
 print(f"Importing utilities...")
-from utils import convert_size
-
+from utils import convert_size, data_dir
 
 # ~5 sec
 print(f"Loading datasets... (~5 sec)")
 
-data_dir = "/usatlas/atlas01/atlasdisk/users/atlas_wifeng/photon-jet/data"
-
-os.chdir(f"{data_dir}/raw_files/npz")
+os.chdir(f"{data_dir}/npz")
 raw_pions = dict(np.load("pi0_40-250GeV_100k.npz"))
 raw_photons = dict(np.load("gamma_40-250GeV_100k.npz"))
 raw_axion1s = dict(np.load("axion1_40-250GeV_100k.npz"))
