@@ -5,10 +5,10 @@ import numpy as np
 from pathlib import Path
 import h5py
 import yaml
+from utils import data_dir
 
 from tqdm import tqdm
 
-data_dir = yaml.safe_load("./config.yaml")["data_dir"]
 h5_dir = f"{data_dir}/h5"
 np_dir = f"{data_dir}/npz"
 

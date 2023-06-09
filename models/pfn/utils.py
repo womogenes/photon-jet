@@ -1,6 +1,13 @@
 # Utility functions and whatnot
 import math
 import tensorflow as tf
+import yaml
+import os
+
+with open(os.path.join(os.path.dirname(__file__), "config.yaml")) as fin:
+    config = yaml.safe_load(fin)
+    data_dir = config["data_dir"]
+    model_dir = config["model_dir"]
 
 def convert_size(size_bytes):
     if size_bytes == 0:
