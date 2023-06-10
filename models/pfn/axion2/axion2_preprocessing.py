@@ -21,7 +21,7 @@ print(f"Loading datasets... (~5 sec)")
 os.chdir(f"{data_dir}/npz")
 raw_pions = dict(np.load("pi0_40-250GeV_100k.npz"))
 raw_photons = dict(np.load("gamma_40-250GeV_100k.npz"))
-raw_scalars = dict(np.load("scalar_40-250GeV_100k.npz"))
+raw_axion2s = dict(np.load("axion2_40-250GeV_100k.npz"))
 
 def norm_coords(n):
     """
@@ -70,7 +70,7 @@ def process_dataset(dataset):
     return np.concatenate(res, axis=1)
 
 print(f"Processing all datasets...")
-raw_datasets = {"pions": raw_pions, "photons": raw_photons, "scalars": raw_scalars}
+raw_datasets = {"pions": raw_pions, "photons": raw_photons, "axion2s": raw_axion2s}
 processed = {}
 
 for class_type, dataset in raw_datasets.items():
@@ -93,6 +93,6 @@ print(f"All jets take up {convert_size(all_jets.nbytes)}")
 
 # ~10 sec
 print(f"Saving jets... (~10 sec)")
-os.makedirs(f"{data_dir}/processed/scalar_test", exist_ok=True)
-os.chdir(f"{data_dir}/processed/scalar_test")
+os.makedirs(f"{data_dir}/processed/axion2_test", exist_ok=True)
+os.chdir(f"{data_dir}/processed/axion2_test")
 np.savez(f"all_jets_point_cloud.npz", X=all_jets, y=labels)
