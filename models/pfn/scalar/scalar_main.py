@@ -17,7 +17,7 @@ from utils import model_dir
 # Get the data
 print(f"Getting data...")
 (X_train, X_val, X_test,
- Y_train, Y_val, Y_test) = get_data("scalar/all_jets_point_cloud.npz")
+ Y_train, Y_val, Y_test) = get_data("processed/scalar/all_jets_point_cloud.npz")
 
 
 # Create the model
@@ -26,7 +26,6 @@ Phi_sizes = (256,) * 4 + (128,) * 4
 F_sizes = (256,) * 4 + (128,) * 4
 
 _, n_particles, n_features = X_train.shape
-print(f"features: {n_features}, particles: {n_particles}")
 model = PFN(
     n_features=n_features,
     n_particles=n_particles,
