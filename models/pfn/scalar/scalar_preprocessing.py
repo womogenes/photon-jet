@@ -93,6 +93,6 @@ print(f"All jets take up {convert_size(all_jets.nbytes)}")
 
 # ~10 sec
 print(f"Saving jets... (~10 sec)")
-os.makedirs(f"{data_dir}/processed/scalar_test", exist_ok=True)
-os.chdir(f"{data_dir}/processed/scalar_test")
+os.makedirs(f"{data_dir}/processed/scalar", exist_ok=True)
+os.chdir(f"{data_dir}/processed/scalar")
 np.savez(f"all_jets_point_cloud.npz", X=all_jets, y=labels)

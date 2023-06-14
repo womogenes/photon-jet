@@ -30,4 +30,3 @@ for dataset in tqdm(os.listdir(h5_dir)):
         convert(dataset)
     except OSError as e:
         print(f"OSError for {dataset}")
-    

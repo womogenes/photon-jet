@@ -42,7 +42,7 @@ npz/
   - gamma_40-250GeV_100k.npz
   - scalar1_40-250GeV_100k.npz
 processed/
-  scalars/
+  scalar/
       - all_jets_point_cloud.npz
 ```
 

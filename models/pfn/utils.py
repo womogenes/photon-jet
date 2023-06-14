@@ -4,6 +4,12 @@ import tensorflow as tf
 import yaml
 import os
 
+# Make tensorflow not use too much memory
+gpus = tf.config.list_physical_devices("GPU")
+for gpu in gpus:
+    tf.config.experimental.set_memory_growth(gpu, True)
+
+# Load data directories
 with open(os.path.join(os.path.dirname(__file__), "config.yaml")) as fin:
     config = yaml.safe_load(fin)
     data_dir = config["data_dir"]
