@@ -22,8 +22,8 @@ print(f"Getting data...")
 
 # Create the model
 print(f"Creating model...")
-Phi_sizes = (256,) * 4 + (128,) * 4
-F_sizes = (256,) * 4 + (128,) * 4
+Phi_sizes = (512,) * 4 + (256,) * 3
+F_sizes = (256,) * 4 + (128,) * 3
 
 _, n_particles, n_features = X_train.shape
 model = PFN(
@@ -47,11 +47,11 @@ def train_iteration(lr, epochs):
 
 def save_model(name):
     cur_date = dt.datetime.now().strftime("%Y-%m-%d")
-    model.save(f"{model_dir}/name_{cur_date}")
+    model.save(f"{model_dir}/{name}_{cur_date}")
 
     
 if __name__ == "__main__":
     print(f"Training model...")
     print(f"=== Training with lr=2e-4 [{dt.datetime.now()}] ===")
-    train_iteration(lr=2e-4, epochs=45)
+    train_iteration(lr=2e-5, epochs=30)
 
