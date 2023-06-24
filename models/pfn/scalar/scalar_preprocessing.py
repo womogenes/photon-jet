@@ -21,7 +21,7 @@ print(f"Loading datasets... (~5 sec)")
 os.chdir(f"{data_dir}/npz")
 raw_pions = dict(np.load("pi0_40-250GeV_100k.npz"))
 raw_photons = dict(np.load("gamma_40-250GeV_100k.npz"))
-raw_scalars = dict(np.load("scalar_40-250GeV_100k.npz"))
+raw_scalars = dict(np.load("scalar1_40-250GeV_100k.npz"))
 
 def norm_coords(n):
     """
