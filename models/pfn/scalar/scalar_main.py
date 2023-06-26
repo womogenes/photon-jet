@@ -17,13 +17,13 @@ from utils import model_dir
 # Get the data
 print(f"Getting data...")
 (X_train, X_val, X_test,
- Y_train, Y_val, Y_test) = get_data("processed/scalar/all_jets_point_cloud.npz")
+ Y_train, Y_val, Y_test) = get_data("processed/scalar/all_jets_sparse_point_cloud.npz")
 
 
 # Create the model
 print(f"Creating model...")
-Phi_sizes = (512,) * 4 + (256,) * 3
-F_sizes = (256,) * 4 + (128,) * 3
+Phi_sizes = (128,) * 4 + (64,) * 3
+F_sizes = (128,) * 4 + (64,) * 3
 
 _, n_particles, n_features = X_train.shape
 model = PFN(
@@ -36,7 +36,8 @@ model = PFN(
 
 
 # Train the model
-def train_iteration(lr, epochs):
+def train_iteration(lr, epochs):    
+    print(f"=== Training with lr={lr} for {epochs} epochs [{dt.datetime.now()}] ===")
     fit_history = train_model(
         model=model, 
         data=(X_train, X_val, Y_train, Y_val),
@@ -52,6 +53,6 @@ def save_model(name):
     
 if __name__ == "__main__":
     print(f"Training model...")
-    print(f"=== Training with lr=2e-4 [{dt.datetime.now()}] ===")
-    train_iteration(lr=2e-5, epochs=30)
-
+    train_iteration(lr=2e-4, epochs=45)
+    train_iteration(lr=2e-5, epochs=45)
+    train_iteration(lr=2e-6, epochs=30)
