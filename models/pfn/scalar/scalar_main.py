@@ -14,27 +14,6 @@ from model import PFN
 from train_model import train_model
 from utils import model_dir
 
-# Get the data
-print(f"Getting data...")
-(X_train, X_val, X_test,
- Y_train, Y_val, Y_test) = get_data("processed/scalar/all_jets_sparse_point_cloud.npz")
-
-
-# Create the model
-print(f"Creating model...")
-Phi_sizes = (128,) * 4 + (64,) * 3
-F_sizes = (128,) * 4 + (64,) * 3
-
-_, n_particles, n_features = X_train.shape
-model = PFN(
-    n_features=n_features,
-    n_particles=n_particles,
-    n_outputs=Y_train.shape[1],
-    Phi_sizes=Phi_sizes,
-    F_sizes=F_sizes
-)
-
-
 # Train the model
 def train_iteration(lr, epochs):    
     print(f"=== Training with lr={lr} for {epochs} epochs [{dt.datetime.now()}] ===")
@@ -52,7 +31,28 @@ def save_model(name):
 
     
 if __name__ == "__main__":
+    # Get the data
+    print(f"Getting data...")
+    (X_train, X_val, X_test,
+     Y_train, Y_val, Y_test) = get_data("processed/scalar/all_jets_sparse_point_cloud.npz")
+
+
+    # Create the model
+    print(f"Creating model...")
+    Phi_sizes = (256,) * 4 + (128,) * 4
+    F_sizes = (256,) * 4 + (128,) * 4
+
+    _, n_particles, n_features = X_train.shape
+    model = PFN(
+        n_features=n_features,
+        n_particles=n_particles,
+        n_outputs=Y_train.shape[1],
+        Phi_sizes=Phi_sizes,
+        F_sizes=F_sizes
+    )
+    
     print(f"Training model...")
     train_iteration(lr=2e-4, epochs=45)
     train_iteration(lr=2e-5, epochs=45)
     train_iteration(lr=2e-6, epochs=30)
+    save_model("512x256")
