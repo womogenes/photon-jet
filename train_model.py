@@ -67,8 +67,6 @@ if __name__ == "__main__":
     print(f"Creating model...")
     Phi_sizes = (256,) * 4 + (128,) * 4
     F_sizes = (256,) * 4 + (128,) * 4
-#     Phi_sizes = (32,) * 4 + (16,) * 4
-#     F_sizes = (32,) * 4 + (16,) * 4
 
     # Extract data shape using X_train
     _, n_particles, n_features = data[0].shape
@@ -81,11 +79,10 @@ if __name__ == "__main__":
     )
     
     print(f"Training model...")
-    hist = [None] * 3  # Store training loss/accuracy logs
     hist = [
-        train_iteration(model, data, lr=2e-4, epochs=5),
-#         train_iteration(model, data, lr=2e-5, epochs=45),
-#         train_iteration(model, data, lr=2e-6, epochs=30)
+        train_iteration(model, data, lr=2e-4, epochs=45),
+        train_iteration(model, data, lr=2e-5, epochs=45),
+        train_iteration(model, data, lr=2e-6, epochs=30)
     ]
     
     # Save these training logs somewhere
