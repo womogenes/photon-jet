@@ -1,7 +1,7 @@
 """
 test_model.py
 
-Various tests to test a model.
+Tests the PFN.
 """
 
 print(f"Importing lots of stuff...")
@@ -73,6 +73,7 @@ if __name__ == "__main__":
     
     print(f"Confusion matrix:")
     print(cm)
+    print(f"Overall accuracy: {accuracy * 100:.5f}%")
     
     task2signature = {
         "scalar1": r"s\rightarrow\pi^0\pi^0",

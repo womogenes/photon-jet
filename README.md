@@ -7,6 +7,14 @@ This repository contains source code for a ParticleFlow model the paper ["Probin
 
 For more on the ParticleFlow architecture, see the paper here: https://arxiv.org/abs/1810.05165
 
+## tl;dr
+
+1. Edit `config.yaml` to point to a data directory that has a sub-directory named `h5` which contains `pi0_40-250GeV_100k.h5`, etc.
+2. `python preprocessing.py`
+3. `python train_model.py --task=scalar1`
+4. `python test_model.py --task=scalar1`
+5. Outputs can be viewed in the `output_dir` specified in `config.yaml`.
+
 ## Setup
 
 ### Dependencies
@@ -15,13 +23,14 @@ This code requires Python libraries `tensorflow`, `scikit-learn`, `tqdm`, `matpl
 
 ### Configuration
 
-Edit `config.yaml` to point to where you are storing data and where you want models to be saved.
+Edit `config.yaml` to point to where you are storing data and where you want models to be saved. Also, `output_dir` is where outputs (like training history stats, plots, etc.) will be placed.
 
-```
+```yaml
 # config.yaml
 
 data_dir: <data_dir>
 model_dir: <data_dir>
+output_dir: <output_dir>
 ```
 
 Prepare the data directory so that it looks like this:
@@ -34,7 +43,7 @@ Prepare the data directory so that it looks like this:
     - scalar1_40-250GeV_100k.h5
 ```
 
-After we're done with the two preprocessing steps, the directory will have some new files:
+After we're done with preprocessing, the directory will have some new files:
 
 ```
 <data_dir>/
@@ -50,19 +59,25 @@ After we're done with the two preprocessing steps, the directory will have some 
 
 ## Data preprocessing
 
-Run `preprocessing.py`. This will convert ==================
+Run `preprocessing.py`. This will convert the four-layer images in the `.h5` files into `.npy` files representing point clouds. Each point cloud will have shape `(100000, 960, 4)` where
+- 100000 is the no. of training examples (individual clouds)
+- 960 is the number of particles in each cloud
+- 4 is the number of features per point (currently $\eta$, $\phi$, energy, and layer number)
 
-1. the training data `X`, of shape `(300000, 960, 4)` (300k examples, 960 points per jet, 4 features per point)
-2. the training labels `y`, of shape `(300000, 3)` which are one-hot encoded vectors of the label. (`0` - pion, `1` - photon, `2` - scalar)
+### Training the model
 
-### Training and testing the model
+Run
+```bash
+python train_model.py --task=scalar1
+```
+`scalar1` can be replaced with `axion1` or `axion2` to train for the other two tasks.
 
-Run `models/pfn/scalar/scalar_main.ipynb` as a notebook.
+After training, the model will be saved to the directory `<model_dir>/scalar1_pfn` (or `axion1_pfn`, etc.). This currently cannot be changed. Training history will also be stored in `<output_dir>/scalar1_train_history.json`.`
 
-The `train_iteration` function allows one to train the model within a specified learning rate for a specified number of epochs. My recipe for obtaining the 97% accuracy model:
+### Testing the model
 
-1. Train with lr=2e-4 for 45 epochs (should get to >80% val accuracy)
-2. Train with lr=2e-5 for 45 epochs (should get to >90% val accuracy)
-3. Train with lr=2e-6 for 30 epochs (should get to ~97% val accuracy)
-
-Training took about two hours on an Nvidia P100 GPU.
+Run
+```bash
+python test_model.py --task=scalar1
+```
+(Again, `scalar1` can be replaced.) This will print out the confusion matrix and accuracy, as well as save a plot of the confusion matrix to `<output_dir>/scalar1_confusion_matrix.png`.
