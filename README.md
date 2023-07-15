@@ -43,22 +43,15 @@ After we're done with the two preprocessing steps, the directory will have some 
     - gamma_40-250GeV_100k.h5
     - scalar1_40-250GeV_100k.h5
   processed/
-    - pi0_cloud.npz
-    - gamma_cloud.npz
-    - scalar1_cloud.npz
+    - pi0_cloud.npy
+    - gamma_cloud.npy
+    - scalar1_cloud.npy
 ```
 
 ## Data preprocessing
 
-**First**, run `h5_to_npz.py`.
+Run `preprocessing.py`. This will convert ==================
 
-```bash
-python h5_to_npz.py
-```
-
-This will convert all `.h5` files in `<data_dir>/h5` into `.npz` files in `<data_dir>/npz`. (Folder will be automatically created.)
-
-**Second**, run `models/pfn/scalar/scalar_preprocessing.py`. This will preprocess of the numpy data (transforms calorimeter images into point clouds). It'll write a file (8.6 GB) to `<data_dir>/preprocessed/all_jets_point_cloud.npz`, which now contains
 1. the training data `X`, of shape `(300000, 960, 4)` (300k examples, 960 points per jet, 4 features per point)
 2. the training labels `y`, of shape `(300000, 3)` which are one-hot encoded vectors of the label. (`0` - pion, `1` - photon, `2` - scalar)
 

@@ -2,7 +2,6 @@
 Various tests to test a model.
 """
 
-from data import get_data
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 import numpy as np
 
@@ -17,7 +16,7 @@ def test_model(model, data):
     
     # Confusion matrix
     cm = confusion_matrix(test_labels, pred_labels).astype(float)
-    cm /= np.sum(cm, axis=1, keepdims=True)
+    cm /= np.sum(cm, axis=1, keepdims=True) 
     
     return mask.mean(), cm
 

@@ -1,8 +1,11 @@
 """
 preprocessing.py
 
-Turn .h5 files into point clouds.
-Takes a couple minutes to complete.
+Turn .h5 files into point clouds. Usage:
+    python preprocessing.py
+
+Takes no arguments. All files in <data_dir>/h5 are automatically
+    converted to point clouds.
 """
 
 print(f"Importing computational stuff...")
