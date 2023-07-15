@@ -1,52 +1,62 @@
 # Point cloud-based models for photon jet classification
 
-Paper: https://arxiv.org/abs/2203.16703
+This repository contains source code for a ParticleFlow model the paper ["Probing highly collimated photon-jets with deep learning."](https://arxiv.org/abs/2203.16703) In short, we're trying to discriminate the decay signatures (signals) of various new particle decay patterns (of scalars and pseudoscalars) from background signals (of photons and pions). There are three different three-class classification tasks here:
+1. Discriminate between $\pi^0$, $\gamma$, and $s\rightarrow \pi^0\pi^0$
+2. Discriminate between $\pi^0$, $\gamma$, and $a\rightarrow \gamma\gamma$
+3. Discriminate between $\pi^0$, $\gamma$, and $a\rightarrow 3\pi^0$
 
-## Particle flow network
+For more on the ParticleFlow architecture, see the paper here: https://arxiv.org/abs/1810.05165
 
-Paper: https://arxiv.org/abs/1810.05165
+## Setup
 
-All relevant code is in `models/pfn/'.
+### Dependencies
 
-### Requirements
+This code requires Python libraries `tensorflow`, `scikit-learn`, `tqdm`, `matplotlib`, and `pyyaml`.
 
-Requirements:
-1. A way to open Jupyter notebooks
-2. [`tensorflow` library](https://www.tensorflow.org/install/pip)
-3. [`energyflow` library](https://energyflow.network/installation) (Note: this dependency is not really required because the PFN model doesn't actually come from here, it's re-implemented by hand. The library simply has some useful utility functions, namely `data_split` and `to_categorical`, that are useful. Might write own implementations later.)
-4. [`scikit-learn`](https://scikit-learn.org/stable)
-5. `tqdm`, `matplotlib`, and `pyyaml` (installable via pip)
+### Configuration
 
-The code is tested on Linux.
-
-### Data preprocessing
-
-Edit the paths in `/models/pfn/config.yaml` to point to the correct data and model directories. The variable `data_dir` should contain the path to a directory that **already** has the following structure:
+Edit `config.yaml` to point to where you are storing data and where you want models to be saved.
 
 ```
-h5/
-  - pi0_40-250GeV_100k.h5
-  - gamma_40-250GeV_100k.h5
-  - scalar1_40-250GeV_100k.h5
+# config.yaml
+
+data_dir: <data_dir>
+model_dir: <data_dir>
 ```
 
-After we're done with the two preprocessing steps, the folder `data_dir` should look like this:
+Prepare the data directory so that it looks like this:
 
 ```
-h5/
-  - pi0_40-250GeV_100k.h5
-  - gamma_40-250GeV_100k.h5
-  - scalar1_40-250GeV_100k.h5
-npz/
-  - pi0_40-250GeV_100k.npz
-  - gamma_40-250GeV_100k.npz
-  - scalar1_40-250GeV_100k.npz
-processed/
-  scalar/
-      - all_jets_point_cloud.npz
+<data_dir>/
+  h5/
+    - pi0_40-250GeV_100k.h5
+    - gamma_40-250GeV_100k.h5
+    - scalar1_40-250GeV_100k.h5
 ```
 
-**First**, run `h5_to_npz.py`. This will turn all `.h5` files in `<data_dir>/h5` into `.npz` files in `<data_dir>/npz`. (Folder will be automatically created.) There will be an `OSError` with `gamma_40-250GeV_100k_mass0p5GeV.h5`, and that's ok (the file isn't used currently).
+After we're done with the two preprocessing steps, the directory will have some new files:
+
+```
+<data_dir>/
+  h5/
+    - pi0_40-250GeV_100k.h5
+    - gamma_40-250GeV_100k.h5
+    - scalar1_40-250GeV_100k.h5
+  processed/
+    - pi0_cloud.npz
+    - gamma_cloud.npz
+    - scalar1_cloud.npz
+```
+
+## Data preprocessing
+
+**First**, run `h5_to_npz.py`.
+
+```bash
+python h5_to_npz.py
+```
+
+This will convert all `.h5` files in `<data_dir>/h5` into `.npz` files in `<data_dir>/npz`. (Folder will be automatically created.)
 
 **Second**, run `models/pfn/scalar/scalar_preprocessing.py`. This will preprocess of the numpy data (transforms calorimeter images into point clouds). It'll write a file (8.6 GB) to `<data_dir>/preprocessed/all_jets_point_cloud.npz`, which now contains
 1. the training data `X`, of shape `(300000, 960, 4)` (300k examples, 960 points per jet, 4 features per point)
