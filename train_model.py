@@ -82,7 +82,7 @@ if __name__ == "__main__":
     hist = [
         train_iteration(model, data, lr=2e-4, epochs=45),
         train_iteration(model, data, lr=2e-5, epochs=45),
-        train_iteration(model, data, lr=2e-6, epochs=30)
+        train_iteration(model, data, lr=2e-6, epochs=45)
     ]
     
     # Save these training logs somewhere
