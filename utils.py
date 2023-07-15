@@ -14,6 +14,9 @@ with open(os.path.join(os.path.dirname(__file__), "config.yaml")) as fin:
     config = yaml.safe_load(fin)
     data_dir = config["data_dir"]
     model_dir = config["model_dir"]
+    output_dir = config["output_dir"]
+    
+    os.makedirs(output_dir, exist_ok=True)
 
 
 def convert_size(size_bytes):

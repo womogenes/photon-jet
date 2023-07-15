@@ -20,17 +20,15 @@ def data_split(X, Y, val, test):
 
     val and test should be proportions of the dataset
     """
-    assert(val + test < 1), "val + test should be less than 1."
     assert(len(X) == len(Y)), "X and Y should have same length."
+    assert(val + test < len(X)), "val + test should comprise less than total."
 
     N = len(X)
-    n_val = int(N * val)
-    n_test = int(N * test)
-    n_train = N - n_val - n_test
-
+    train = N - val - test
+    
     return (
-        X[:n_train], X[n_train:(n_train + n_val)], X[(n_train + n_val):],
-        Y[:n_train], Y[n_train:(n_train + n_val)], X[(n_train + n_val):]
+        X[:train], X[train:(train + val)], X[(train + val):],
+        Y[:train], Y[train:(train + val)], Y[(train + val):]
     )
 
 
@@ -44,12 +42,19 @@ def get_data(task):
     X = np.concatenate([
         np.load(f"{data_dir}/processed/{path}") \
         for path in cloud_paths
-    ], axis=1)
-    assert(N == 100000)  # Assumption about data size
+    ], axis=0)
+    
+    N = 100000  # Size of each dataset
+    assert(len(X) == 3 * N)  # Assumption about data size
 
     Y = to_categorical((0,) * N + (1,) * N + (2,) * N)
     
-    N = len(X)
+    # Scramble in the same order
+    rng = np.random.default_rng(0)
+    permutation = np.random.permutation(3 * N)
+    X = X[permutation]
+    Y = Y[permutation]
+    
     n_val = int(0.1 * N)
     n_test = int(0.1 * N)
     
