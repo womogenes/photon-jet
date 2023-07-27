@@ -7,6 +7,7 @@ Tests the PFN.
 print(f"Importing lots of stuff...")
 
 import os
+import json
 import numpy as np
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
@@ -74,12 +75,29 @@ if __name__ == "__main__":
     print(cm)
     print(f"Overall accuracy: {accuracy * 100:.5f}%")
     
-    task2signature = {
-        "scalar1": r"s\rightarrow\pi^0\pi^0",
-        "axion1": r"a\rightarrow\gamma\gamma",
-        "axion2": r"a\rightarrow 3\pi^0"
-    }
-    plot_cm(cm, [r"\pi^0", r"\gamma", task2signature[args.task]])
-    
+    plot_cm(cm, ["pion", "photon", args.task])
+    plt.title(f"Confusion matrix, {args.task} task")
     plt.savefig(f"{output_dir}/{args.task}_confusion_matrix")
     
+    
+    # Make training plots
+    with open(f"{output_dir}/{args.task}_train_history.json") as fin:
+        train_hist = json.load(fin)
+    
+    fig, axs = plt.subplots(1, 2, figsize=(12, 4))
+    
+    axs[0].plot(train_hist["loss"], label="training loss")
+    axs[0].plot(train_hist["val_loss"], label="validation loss")
+    axs[0].set_xlabel("Epoch")
+    axs[0].set_ylabel("Loss")
+    axs[0].legend()
+    
+    axs[1].plot(train_hist["accuracy"], label="training accuracy")
+    axs[1].plot(train_hist["val_accuracy"], label="validation accuracy")
+    axs[1].set_xlabel("Epoch")
+    axs[1].set_ylabel("Accuracy")
+    axs[1].legend()
+    
+    plt.suptitle(f"Training history for {args.task} pfn")
+    
+    plt.savefig(f"{output_dir}/{args.task}_train_history")
