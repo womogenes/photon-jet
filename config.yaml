@@ -1,3 +1,3 @@
 data_dir: /usatlas/atlas01/atlasdisk/users/atlas_wifeng/photon-jet/data
-model_dir: /usatlas/atlas01/atlasdisk/users/atlas_wifeng/photon-jet/models
-output_dir: /usatlas/u/atlas_wifeng/photon-jet/output
+model_dir: /usatlas/atlas01/atlasdisk/users/atlas_wifeng/photon-jet/models_v2
+output_dir: /usatlas/u/atlas_wifeng/photon-jet/output_v2

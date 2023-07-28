@@ -5,7 +5,7 @@ Exports a function, get_data(task) which returns
         (X_train, X_val, X_test,
          Y_train, Y_val, Y_test).
 
-Train-val-test split is 80-10-10.
+Train-val-test split is 70-0-30. (Test set doubles as val set.)
 """
 
 import numpy as np
@@ -26,10 +26,16 @@ def data_split(X, Y, val, test):
     N = len(X)
     train = N - val - test
     
-    return (
-        X[:train], X[train:(train + val)], X[(train + val):],
-        Y[:train], Y[train:(train + val)], Y[(train + val):]
-    )
+    X_train, Y_train = X[:train], Y[:train]
+    X_val, Y_val = X[train:(train + val)], Y[train:(train + val)]    
+    
+    if test == 0:
+        X_test, Y_test = X_val, Y_val
+    else:
+        X_test, Y_test = X[(train + val):], Y[(train + val):]
+        
+    return (X_train, X_val, X_test,
+            Y_train, Y_val, Y_test)
 
 
 def get_data(task):
@@ -55,7 +61,7 @@ def get_data(task):
     X = X[permutation]
     Y = Y[permutation]
     
-    n_val = int(0.1 * N)
-    n_test = int(0.1 * N)
+    n_val = int(0.3 * N)
+    n_test = 0  #int(0.1 * N)
     
     return data_split(X, Y, val=n_val, test=n_test)

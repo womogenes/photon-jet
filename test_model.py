@@ -36,14 +36,45 @@ def test_model(model, data):
     return mask.mean(), cm
 
 
-def plot_cm(cm, labels):
-    assert(cm.shape[0] == len(labels))
+def plot_cm(cm, labels, save_path):
+    matrix = np.array(cm)[::-1,::-1]
+    labels = labels[::-1]
 
-    disp = ConfusionMatrixDisplay(
-        confusion_matrix=cm,
-        display_labels=labels
-    );
-    disp.plot(cmap="Blues")
+    fig, ax = plt.subplots()
+    ax.matshow(cm, cmap=plt.cm.Blues)
+    for i in range(cm.shape[0]):
+        for j in range(cm.shape[1]):
+            value = matrix[i,j]
+            color = "white" if value >= 0.5 else "black"
+            ax.text(x=j, y=i,s=f"{cm[i,j]:.3f}", va='center', ha='center', color=color) #, size='xx-large')
+
+    ax.tick_params(top=False,
+                   bottom=False,
+                   left=False,
+                   right=False,
+                   labelleft=True,
+                   labelbottom=True,
+                   labeltop=False)
+
+    # Suppress warnings (Bad practice!)
+    # Something about how "FixedFormatter should only be used together with FixedLocator"
+    import warningss
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        ax.set_xticklabels([""] + labels)
+        ax.set_yticklabels([""] + labels, rotation="vertical")
+    ax.tick_params(axis=u'both', which=u'both',length=0)
+    
+    # https://stackoverflow.com/questions/29988241/hide-ticks-but-show-tick-labels
+    plt.xlabel("predicted label") #, fontsize=18)
+    plt.ylabel("true label") #, fontsize=18)
+
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.spines["bottom"].set_visible(False)
+    ax.spines["left"].set_visible(False)
+
+    plt.savefig(save_path, format="pdf", bbox_inches="tight")
 
     
 if __name__ == "__main__":
@@ -75,9 +106,13 @@ if __name__ == "__main__":
     print(cm)
     print(f"Overall accuracy: {accuracy * 100:.5f}%")
     
-    plot_cm(cm, ["pion", "photon", args.task])
-    plt.title(f"Confusion matrix, {args.task} task")
-    plt.savefig(f"{output_dir}/{args.task}_confusion_matrix")
+    labels = ["pion", "photon", args.task]
+    plot_cm(cm, labels, f"{output_dir}/{args.task}_confusion_matrix.pdf")
+    with open(f"{output_dir}/{args.task}_confusion_matrix.json", "w") as fout:
+        json.dump({
+            "labels": labels,
+            "confusion_matrix": cm.tolist()
+        }, fout)
     
     
     # Make training plots
