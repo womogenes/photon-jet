@@ -58,7 +58,7 @@ def plot_cm(cm, labels, save_path):
 
     # Suppress warnings (Bad practice!)
     # Something about how "FixedFormatter should only be used together with FixedLocator"
-    import warningss
+    import warnings
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
         ax.set_xticklabels([""] + labels)
@@ -106,9 +106,14 @@ if __name__ == "__main__":
     print(cm)
     print(f"Overall accuracy: {accuracy * 100:.5f}%")
     
-    labels = ["pion", "photon", args.task]
-    plot_cm(cm, labels, f"{output_dir}/{args.task}_confusion_matrix.pdf")
-    with open(f"{output_dir}/{args.task}_confusion_matrix.json", "w") as fout:
+    task2label = {
+        "scalar1": r"$s\rightarrow\pi^0\pi^0$",
+        "axion1": r"$a\rightarrow\gamma\gamma$",
+        "axion2": r"$a\rightarrow3\pi^0$"
+    }
+    labels = [r"$\pi^0$", r"$\gamma$", task2label[args.task]]
+    plot_cm(cm, labels, f"{output_dir}/{args.task}_PFN_ConfusionMatrix.pdf")
+    with open(f"{output_dir}/{args.task}_PFN_ConfusionMatrix.json", "w") as fout:
         json.dump({
             "labels": labels,
             "confusion_matrix": cm.tolist()

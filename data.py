@@ -56,12 +56,12 @@ def get_data(task):
     Y = to_categorical((0,) * N + (1,) * N + (2,) * N)
     
     # Scramble in the same order
-    rng = np.random.default_rng(0)
+    rng = np.random.default_rng(1)
     permutation = np.random.permutation(3 * N)
     X = X[permutation]
     Y = Y[permutation]
     
-    n_val = int(0.3 * N)
+    n_val = int(0.3 * 3 * N)
     n_test = 0  #int(0.1 * N)
     
     return data_split(X, Y, val=n_val, test=n_test)
