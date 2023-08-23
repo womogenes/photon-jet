@@ -44,9 +44,9 @@ def plot_cm(cm, labels, save_path):
     ax.matshow(cm, cmap=plt.cm.Blues)
     for i in range(cm.shape[0]):
         for j in range(cm.shape[1]):
-            value = matrix[i,j]
+            value = cm[i,j]
             color = "white" if value >= 0.5 else "black"
-            ax.text(x=j, y=i,s=f"{cm[i,j]:.3f}", va='center', ha='center', color=color) #, size='xx-large')
+            ax.text(x=j, y=i,s=f"{value:.3f}", va='center', ha='center', color=color) #, size='xx-large')
 
     ax.tick_params(top=False,
                    bottom=False,
