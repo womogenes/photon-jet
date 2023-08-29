@@ -56,7 +56,7 @@ def get_data(task):
     Y = to_categorical((0,) * N + (1,) * N + (2,) * N)
     
     # Scramble in the same order
-    rng = np.random.default_rng(1)
+    rng = np.random.default_rng(0)
     permutation = np.random.permutation(3 * N)
     X = X[permutation]
     Y = Y[permutation]
