@@ -64,7 +64,7 @@ def load_data(task_name):
     labels = np.concatenate((np.zeros(N) + 0,
                              np.zeros(N) + 1,
                              np.zeros(N) + 2))
-    rng = np.random.default_rng(0)
+    rng = np.random.default_rng(2)
     perm = np.random.permutation(3 * N)
     n_train = round(0.7 * perm.shape[0])
     n_test = 3 * N - n_train
