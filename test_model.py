@@ -46,7 +46,12 @@ def plot_cm(cm, labels, save_path):
         for j in range(cm.shape[1]):
             value = cm[i,j]
             color = "white" if value >= 0.5 else "black"
-            ax.text(x=j, y=i,s=f"{value:.3f}", va='center', ha='center', color=color) #, size='xx-large')
+            ax.text(
+                x=j, y=i,
+                s=f"{value:.3f}",
+                va='center', ha='center',
+                color=color, size='large'
+            )
 
     ax.tick_params(top=False,
                    bottom=False,

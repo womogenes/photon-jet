@@ -2,5 +2,7 @@ output/
 __pycache__/
 .ipynb_checkpoints/
 .vscode/
+final_evaluate/*_results/
+final_evaluate/*.zip
 
 .nfs*
