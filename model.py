@@ -4,7 +4,7 @@ from tensorflow.keras import layers
 def PFN(n_features, n_particles, n_outputs,
         Phi_sizes, F_sizes, name=None):
     """
-    Creates a keras ParticleFlow model with given parameters.
+    Creates a keras Particle Flow model with given parameters.
     
     The PFN model can be written as
         PFN(x) = F(sum(Phi(inputs))
@@ -33,6 +33,50 @@ def PFN(n_features, n_particles, n_outputs,
     x = masking_layer(inputs)
     for i, layer in enumerate(Phi_layers):
         x = layers.TimeDistributed(layer, name=f"Phi_{i}")(x)
+    x = tf.math.reduce_sum(x, axis=1)
+    for layer in F_layers:
+        x = layer(x)
+    x = last_layer(x)
+
+    return tf.keras.Model(inputs=inputs, outputs=x)
+
+
+def EFN(n_features, n_particles, n_outputs,
+        Phi_sizes, F_sizes, name=None):
+    """
+    Creates a keras Energy Flow model with given parameters.
+    
+    The EFN model can be written as
+        EFN(x) = F(sum(energy * Phi(inputs))
+    
+    Where Phi and F are fully connected layers that approximate
+        arbitrary functions.
+    """
+    inputs = layers.Input((n_particles, n_features), name="input")
+    log_energy = tf.math.log(inputs[:,:,2,tf.newaxis])
+    #log_energy = inputs[:,:,2,tf.newaxis]
+    
+    # Point clouds are sparse; mask out the particles with all zeros
+    masking_layer = layers.Masking(
+        mask_value=0.,
+        input_shape=(n_particles, n_features)
+    )
+    Phi_layers = [
+        layers.Dense(size, activation="relu") \
+        for i, size in enumerate(Phi_sizes)
+    ]
+    F_layers = [
+        layers.Dense(size, activation="relu", name=f"F_{i}") \
+        for i, size in enumerate(F_sizes)
+    ]
+    last_layer = layers.Dense(n_outputs, name="output")
+
+    # Feed forward
+    x = masking_layer(inputs)
+    for i, layer in enumerate(Phi_layers):
+        x = layers.TimeDistributed(layer, name=f"Phi_{i}")(x)
+    # Multiply by energy
+    x = layers.Multiply()([x, log_energy])
     x = tf.math.reduce_sum(x, axis=1)
     for layer in F_layers:
         x = layer(x)

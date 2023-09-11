@@ -1,7 +1,7 @@
 """
 main.py
 
-Trains PFN for a given classification task.
+Trains EFN for a given classification task.
 """
 
 print(f"Importing lots of stuff...")
@@ -14,7 +14,7 @@ os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2" # Make tensorflow quieter
 
 import tensorflow as tf
 from data import get_data
-from model import PFN
+from model import EFN
 from utils import model_dir, output_dir
 
 def train_iteration(model, data,
@@ -70,7 +70,7 @@ if __name__ == "__main__":
 
     # Extract data shape using X_train
     _, n_particles, n_features = data[0].shape
-    model = PFN(
+    model = EFN(
         n_features=n_features,
         n_particles=n_particles,
         n_outputs=data[3].shape[1],  # Y_train
@@ -97,6 +97,6 @@ if __name__ == "__main__":
     with open(f"{output_dir}/{args.task}_train_history.json", "w") as fout:
         json.dump(full_hist, fout)
     
-    model_save_path = f"{model_dir}/{args.task}_pfn"
+    model_save_path = f"{model_dir}/{args.task}_efn"
     print(f"Saving model to {model_save_path}...")
     model.save(model_save_path)

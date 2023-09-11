@@ -1,7 +1,7 @@
 """
 test_model.py
 
-Tests the PFN.
+Tests the EFN.
 """
 
 print(f"Importing lots of stuff...")
@@ -86,7 +86,7 @@ if __name__ == "__main__":
     # Task should be one of "scalar1", "axion1", and "axion2"
     # This code is the same as in train_model.py---should we modularize?
     parser = argparse.ArgumentParser(
-        description="Train ParticleFlow on photon jet classification for a specific task."
+        description="Train EnergyFlow on photon jet classification for a specific task."
     )
     parser.add_argument(
         "-t", "--task",
@@ -100,7 +100,7 @@ if __name__ == "__main__":
     for i, thing in enumerate(data):
         print(f"[{i}] {thing.shape}")
     
-    model_path = f"{model_dir}/{args.task}_pfn"
+    model_path = f"{model_dir}/{args.task}_efn"
     print(f"Loading model from {model_path}...")
     model = keras.models.load_model(model_path)
     
@@ -117,8 +117,8 @@ if __name__ == "__main__":
         "axion2": r"$a\rightarrow3\pi^0$"
     }
     labels = [r"$\pi^0$", r"$\gamma$", task2label[args.task]]
-    plot_cm(cm, labels, f"{output_dir}/{args.task}_PFN_ConfusionMatrix.pdf")
-    with open(f"{output_dir}/{args.task}_PFN_ConfusionMatrix.json", "w") as fout:
+    plot_cm(cm, labels, f"{output_dir}/{args.task}_EFN_ConfusionMatrix.pdf")
+    with open(f"{output_dir}/{args.task}_EFN_ConfusionMatrix.json", "w") as fout:
         json.dump({
             "labels": labels,
             "confusion_matrix": cm.tolist()
@@ -135,6 +135,7 @@ if __name__ == "__main__":
     axs[0].plot(train_hist["val_loss"], label="validation loss")
     axs[0].set_xlabel("Epoch")
     axs[0].set_ylabel("Loss")
+    axs[0].set_yscale("log")
     axs[0].legend()
     
     axs[1].plot(train_hist["accuracy"], label="training accuracy")
@@ -143,6 +144,6 @@ if __name__ == "__main__":
     axs[1].set_ylabel("Accuracy")
     axs[1].legend()
     
-    plt.suptitle(f"Training history for {args.task} pfn")
+    plt.suptitle(f"Training history for {args.task} efn")
     
     plt.savefig(f"{output_dir}/{args.task}_train_history")
