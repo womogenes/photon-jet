@@ -66,7 +66,7 @@ if __name__ == "__main__":
     # Create the model
     print(f"Creating model...")
     Phi_sizes = (256,) * 4 + (128,) * 4
-    F_sizes = (256,) * 4 + (128,) * 4
+    F_sizes = (256,) *34 + (128,) * 3
 
     # Extract data shape using X_train
     _, n_particles, n_features = data[0].shape
