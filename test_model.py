@@ -36,21 +36,21 @@ def test_model(model, data):
     return mask.mean(), cm
 
 
-def plot_cm(cm, labels, save_path):
+def plot_cm(cm, labels, save_path):    
     matrix = np.array(cm)[::-1,::-1]
     labels = labels[::-1]
 
     fig, ax = plt.subplots()
-    ax.matshow(cm, cmap=plt.cm.Blues)
-    for i in range(cm.shape[0]):
-        for j in range(cm.shape[1]):
-            value = cm[i,j]
+    ax.matshow(matrix, cmap=plt.cm.Blues)
+    for i in range(matrix.shape[0]):
+        for j in range(matrix.shape[1]):
+            value = matrix[i,j]
             color = "white" if value >= 0.5 else "black"
             ax.text(
                 x=j, y=i,
                 s=f"{value:.3f}",
                 va='center', ha='center',
-                color=color, size='large'
+                color=color, size='x-large'
             )
 
     ax.tick_params(top=False,
@@ -66,8 +66,8 @@ def plot_cm(cm, labels, save_path):
     import warnings
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
-        ax.set_xticklabels([""] + labels)
-        ax.set_yticklabels([""] + labels, rotation="vertical")
+        ax.set_xticklabels([""] + labels, fontdict={"fontsize": "large"})
+        ax.set_yticklabels([""] + labels, rotation="vertical", fontdict={"fontsize": "large"})
     ax.tick_params(axis=u'both', which=u'both',length=0)
     
     # https://stackoverflow.com/questions/29988241/hide-ticks-but-show-tick-labels
@@ -117,6 +117,8 @@ if __name__ == "__main__":
         "axion2": r"$a\rightarrow3\pi^0$"
     }
     labels = [r"$\pi^0$", r"$\gamma$", task2label[args.task]]
+    print(f"cm:")
+    print(cm)
     plot_cm(cm, labels, f"{output_dir}/{args.task}_PFN_ConfusionMatrix.pdf")
     with open(f"{output_dir}/{args.task}_PFN_ConfusionMatrix.json", "w") as fout:
         json.dump({
