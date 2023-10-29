@@ -87,4 +87,5 @@ def process_dataset(path):
 if __name__ == "__main__":
     os.makedirs(f"{data_dir}/processed", exist_ok=True)
     for path in os.listdir(f"{data_dir}/h5"):
+        if "0p5" in path: continue
         process_dataset(path)
