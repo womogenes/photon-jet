@@ -22,7 +22,7 @@ clouds = np.load(f"{data_dir}/processed/{particle_name}_cloud.npy")
 print("Loading model...")
 full_model = tf.keras.models.load_model(f"{model_dir}/{task_name}_pfn")
 
-cut_layers = ["F_0"]
+cut_layers = ["F_1", "F_6"]
 for layer in cut_layers:
     print(f"Cutting at layer {layer} and computing hidden units...")
     tf.keras.backend.clear_session()
@@ -30,12 +30,12 @@ for layer in cut_layers:
         inputs=full_model.input,
         outputs=full_model.get_layer("F_0").input
     )
-    outputs = model.predict(clouds, batch_size=1000)
-    print(f"  {layer} inputs have shape {outputs.shape}.")
-    os.makedirs(f"./{task_name}_{layer}_outputs", exist_ok=True)
-    save_path = f"./{task_name}_{layer}_outputs/{particle_name}.npz"
+    inputs = model.predict(clouds, batch_size=1000)
+    print(f"  {layer} inputs have shape {inputs.shape}.")
+    os.makedirs(f"./{task_name}_{layer}_inputs", exist_ok=True)
+    save_path = f"./{task_name}_{layer}_inputs/{particle_name}.npz"
     print(f"  Saving to {save_path}...")
-    np.save(save_path, outputs)
+    np.save(save_path, inputs)
     
     print()
     

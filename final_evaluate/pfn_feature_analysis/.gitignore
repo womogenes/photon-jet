@@ -1,2 +1,5 @@
 *.npz
 *_model
+*_models
+*_outputs
+*_inputs
