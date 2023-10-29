@@ -5,4 +5,5 @@ __pycache__/
 final_evaluate/*_results/
 final_evaluate/*.zip
 
+config.yaml
 .nfs*
