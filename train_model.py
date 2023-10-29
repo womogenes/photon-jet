@@ -15,11 +15,10 @@ os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2" # Make tensorflow quieter
 import tensorflow as tf
 from data import get_data
 from model import PFN
-from utils import model_dir, output_dir
+from utils import model_dir, output_dir, data_dir
 
 def train_iteration(model, data,
                     lr, epochs,
-                    batch_size=100,
                     verbose=True):
     """
     model  - the tensorflow model to train
@@ -31,9 +30,7 @@ def train_iteration(model, data,
     """    
     print(f"\n=== Training with lr={lr} for {epochs} epochs [{dt.datetime.now()}] ===")
     
-    X_train, X_test, Y_train, Y_test = data
-    train_data = tf.data.Dataset.zip(X_train, Y_train).batch(batch_size)
-    test_data = tf.data.Dataset.zip(X_test, Y_test).batch(batch_size)
+    train_data, test_data = data
     
     model.compile(
         optimizer=tf.keras.optimizers.Adam(learning_rate=lr),
@@ -62,7 +59,10 @@ if __name__ == "__main__":
     
     # Get the data
     print(f"Fetching data...")
-    data = get_data(args.task)
+    
+    train_data = tf.data.Dataset.load(f"{data_dir}/processed/tf_dataset/{args.task}_batched/train")
+    test_data = tf.data.Dataset.load(f"{data_dir}/processed/tf_dataset/{args.task}_batched/test")
+    data = (train_data, test_data)
 
     # Create the model
     print(f"Creating model...")
@@ -70,11 +70,11 @@ if __name__ == "__main__":
     F_sizes = (256,) * 4 + (128,) * 4
 
     # Extract data shape using X_train
-    n_particles, n_features = data[0].element_spec.shape
+    _, n_particles, n_features = train_data.element_spec[0].shape
     model = PFN(
         n_features=n_features,
         n_particles=n_particles,
-        n_outputs=data[3].element_spec.shape[0],  # Y_train
+        n_outputs=train_data.element_spec[1].shape[1],  # Y_train
         Phi_sizes=Phi_sizes,
         F_sizes=F_sizes
     )
