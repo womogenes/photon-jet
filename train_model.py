@@ -31,17 +31,18 @@ def train_iteration(model, data,
     """    
     print(f"\n=== Training with lr={lr} for {epochs} epochs [{dt.datetime.now()}] ===")
     
-    X_train, X_val, _, Y_train, Y_val, _ = data
+    X_train, X_test, Y_train, Y_test = data
+    train_data = tf.data.Dataset.zip(X_train, Y_train).batch(batch_size)
+    test_data = tf.data.Dataset.zip(X_test, Y_test).batch(batch_size)
     
     model.compile(
         optimizer=tf.keras.optimizers.Adam(learning_rate=lr),
         loss=tf.keras.losses.CategoricalCrossentropy(from_logits=True),
         metrics=["accuracy"]
     )
-    fit_history = model.fit(X_train, Y_train,
+    fit_history = model.fit(x=train_data,
                             epochs=epochs,
-                            batch_size=batch_size,
-                            validation_data=(X_val, Y_val),
+                            validation_data=test_data,
                             verbose=verbose)
     
     return fit_history.history
@@ -69,11 +70,11 @@ if __name__ == "__main__":
     F_sizes = (256,) * 4 + (128,) * 4
 
     # Extract data shape using X_train
-    _, n_particles, n_features = data[0].shape
+    n_particles, n_features = data[0].element_spec.shape
     model = PFN(
         n_features=n_features,
         n_particles=n_particles,
-        n_outputs=data[3].shape[1],  # Y_train
+        n_outputs=data[3].element_spec.shape[0],  # Y_train
         Phi_sizes=Phi_sizes,
         F_sizes=F_sizes
     )

@@ -21,7 +21,7 @@ from utils import model_dir, output_dir
 from data import get_data
 
 def test_model(model, data):
-    _, _, X_test, _, _, Y_test = data
+    _, X_test, _, Y_test = data
     preds = model.predict(X_test, batch_size=500)
 
     pred_labels = np.argmax(preds, axis=1)
