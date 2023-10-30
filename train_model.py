@@ -64,15 +64,22 @@ if __name__ == "__main__":
     # Get the data
     print(f"Fetching data...")
     
-    train_data = tf.data.Dataset.load(f"{data_dir}/processed/tf_dataset/{args.task}_batched/train")
-    test_data = tf.data.Dataset.load(f"{data_dir}/processed/tf_dataset/{args.task}_batched/test")
+    train_data = tf.data.Dataset.load(f"{data_dir}/processed/tf_dataset/{args.task}_batched/train").rebatch(256)
+    test_data = tf.data.Dataset.load(f"{data_dir}/processed/tf_dataset/{args.task}_batched/test").rebatch(256)
     data = (train_data, test_data)
+
+    #print(f"train_data size: {len(train_data)}")
 
     # Create the model
     if args.model_dir:
         print(f"Loading pretrained model from {args.model_dir}...")
         model = tf.keras.models.load_model(args.model_dir)
         model.summary()
+        print(f"Computing metrics on test data...")
+        metrics = model.evaluate(test_data)
+        for metric_name, metric in zip(model.metrics_names, metrics):
+            print(f"{metric_name + ':':<10} {metric}")
+        print()
 
     else:
         print(f"Creating model...")
@@ -92,8 +99,8 @@ if __name__ == "__main__":
     
     print(f"Training model...")
     hist = [
-        train_iteration(model, data, lr=2e-6, epochs=6),
-        train_iteration(model, data, lr=1e-6, epochs=6),
+        #train_iteration(model, data, lr=2e-6, epochs=6),
+        #train_iteration(model, data, lr=1e-6, epochs=6),
         #train_iteration(model, data, lr=5e-4, epochs=6),
         #train_iteration(model, data, lr=2e-4, epochs=6),
         #train_iteration(model, data, lr=1e-4, epochs=6)
