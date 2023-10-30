@@ -55,6 +55,10 @@ if __name__ == "__main__":
         choices=["scalar1", "axion1", "axion2"],
         help="Select which of three classficiation tasks to train."
     )
+    parser.add_argument(
+        "-m", "--model-dir",
+        help="Path of a preexiting model to train off of."
+    )
     args = parser.parse_args()
     
     # Get the data
@@ -65,27 +69,34 @@ if __name__ == "__main__":
     data = (train_data, test_data)
 
     # Create the model
-    print(f"Creating model...")
-    Phi_sizes = (256,) * 4 + (128,) * 4
-    F_sizes = (256,) * 4 + (128,) * 4
+    if args.model_dir:
+        print(f"Loading pretrained model from {args.model_dir}...")
+        model = tf.keras.models.load_model(args.model_dir)
+        model.summary()
 
-    # Extract data shape using X_train
-    _, n_particles, n_features = train_data.element_spec[0].shape
-    model = PFN(
-        n_features=n_features,
-        n_particles=n_particles,
-        n_outputs=train_data.element_spec[1].shape[1],  # Y_train
-        Phi_sizes=Phi_sizes,
-        F_sizes=F_sizes
-    )
+    else:
+        print(f"Creating model...")
+        Phi_sizes = (256,) * 4 + (128,) * 4
+        F_sizes = (256,) * 4 + (128,) * 4
+
+        # Extract data shape using X_train
+        _, n_particles, n_features = train_data.element_spec[0].shape
+        model = PFN(
+            n_features=n_features,
+            n_particles=n_particles,
+            n_outputs=train_data.element_spec[1].shape[1],  # Y_train
+            Phi_sizes=Phi_sizes,
+            F_sizes=F_sizes
+        )    
+
     
     print(f"Training model...")
     hist = [
-        train_iteration(model, data, lr=2e-4, epochs=45),
-        train_iteration(model, data, lr=2e-5, epochs=45),
-        train_iteration(model, data, lr=2e-6, epochs=45),
-        train_iteration(model, data, lr=2e-7, epochs=45),
-        train_iteration(model, data, lr=2e-8, epochs=45)
+        train_iteration(model, data, lr=2e-6, epochs=6),
+        train_iteration(model, data, lr=1e-6, epochs=6),
+        #train_iteration(model, data, lr=5e-4, epochs=6),
+        #train_iteration(model, data, lr=2e-4, epochs=6),
+        #train_iteration(model, data, lr=1e-4, epochs=6)
     ]
     
     # Save these training logs somewhere
