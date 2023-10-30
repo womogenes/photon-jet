@@ -22,7 +22,7 @@ from data import get_data
 
 def test_model(model, data):
     _, X_test, _, Y_test = data
-    preds = model.predict(X_test, batch_size=500)
+    preds = model.predict(X_test)
 
     pred_labels = np.argmax(preds, axis=1)
     test_labels = np.argmax(Y_test, axis=1)
@@ -98,7 +98,7 @@ if __name__ == "__main__":
     print(f"Loading data...")
     data = get_data(args.task)
     for i, thing in enumerate(data):
-        print(f"[{i}] {thing.shape}")
+        print(f"[{i}] {thing.element_spec}")
     
     model_path = f"{model_dir}/{args.task}_pfn"
     print(f"Loading model from {model_path}...")
