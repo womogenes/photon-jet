@@ -11,18 +11,22 @@ print("Importing other things...")
 import numpy as np
 from utils import data_dir, model_dir
 
-task_name = "axion2"
-particle_name = "axion2"
+task_name = "scalar1"
+cut_layers = ["Sigma"]
 
 ## LOAD DATA
-print(f"Loading data for particle {particle_name}...")
-clouds = np.load(f"{data_dir}/processed/{particle_name}_cloud.npy")
+particles = ["pi0", "gamma", task_name]
+clouds = []
+for particle in particles:
+    print(f"Loading 10% of data for particle {particle}...")
+    clouds.append(np.load(f"{data_dir}/processed/{particle}_cloud.npy")[::10])
+clouds = np.vstack(clouds)
+print(f"clouds.shape: {clouds.shape}")
 
 ## LOAD MODEL AND SPLIT IT
 print("Loading model...")
 full_model = tf.keras.models.load_model(f"{model_dir}/{task_name}_pfn")
 
-cut_layers = ["F_7"]
 for layer in cut_layers:
     print(f"Cutting at layer {layer} and computing its outputs...")
     tf.keras.backend.clear_session()
@@ -33,9 +37,9 @@ for layer in cut_layers:
     outputs = model.predict(clouds, batch_size=1000)
     print(f"  {layer} outputs have shape {outputs.shape}.")
     
-    save_dir = f"pfn_layer_outputs/{task_name}_{layer}_outputs"
+    save_dir = f"pfn_layer_outputs"
     os.makedirs(save_dir, exist_ok=True)
-    save_path = f"{save_dir}/{particle_name}.npz"
+    save_path = f"{save_dir}/{task_name}_{layer}_10%"
     print(f"  Saving to {save_path}...")
     np.save(save_path, outputs)
     
