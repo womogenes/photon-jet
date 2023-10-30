@@ -11,8 +11,8 @@ print("Importing other things...")
 import numpy as np
 from utils import data_dir, model_dir
 
-task_name = "scalar1"
-particle_name = "scalar1"
+task_name = "axion2"
+particle_name = "axion2"
 
 ## LOAD DATA
 print(f"Loading data for particle {particle_name}...")
@@ -22,7 +22,7 @@ clouds = np.load(f"{data_dir}/processed/{particle_name}_cloud.npy")
 print("Loading model...")
 full_model = tf.keras.models.load_model(f"{model_dir}/{task_name}_pfn")
 
-cut_layers = ["F_1", "F_6"]
+cut_layers = ["F_0", "output"]
 for layer in cut_layers:
     print(f"Cutting at layer {layer} and computing hidden units...")
     tf.keras.backend.clear_session()

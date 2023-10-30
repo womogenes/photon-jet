@@ -33,7 +33,7 @@ def PFN(n_features, n_particles, n_outputs,
     x = masking_layer(inputs)
     for i, layer in enumerate(Phi_layers):
         x = layers.TimeDistributed(layer, name=f"Phi_{i}")(x)
-    x = tf.math.reduce_sum(x, axis=1)
+    x = tf.math.reduce_sum(x, axis=1, name="Sigma")
     for layer in F_layers:
         x = layer(x)
     x = last_layer(x)
