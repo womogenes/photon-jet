@@ -64,8 +64,8 @@ if __name__ == "__main__":
     # Get the data
     print(f"Fetching data...")
     
-    train_data = tf.data.Dataset.load(f"{data_dir}/processed/tf_dataset/{args.task}_batched/train").rebatch(256)
-    test_data = tf.data.Dataset.load(f"{data_dir}/processed/tf_dataset/{args.task}_batched/test").rebatch(256)
+    train_data = tf.data.Dataset.load(f"{data_dir}/processed/tf_dataset/{args.task}_batched/train")
+    test_data = tf.data.Dataset.load(f"{data_dir}/processed/tf_dataset/{args.task}_batched/test")
     data = (train_data, test_data)
 
     #print(f"train_data size: {len(train_data)}")
