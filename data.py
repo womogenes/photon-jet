@@ -15,7 +15,7 @@ import sys
 
 
 def get_data(task, verbose=False):
-    datasets = ["X_train", "X_test", "Y_train", "Y_test"]
+    datasets = ["train", "test"]
     res = []
     
     for name in (tqdm(datasets) if verbose else datasets):
@@ -23,6 +23,6 @@ def get_data(task, verbose=False):
             with contextlib.redirect_stdout(null_file), contextlib.redirect_stderr(null_file):
                 # Your code here that produces output
                 print("This message will not be printed or shown.")
-                res.append(tf.data.Dataset.load(f"{data_dir}/processed/tf_dataset/{task}/{name}"))
+                res.append(tf.data.Dataset.load(f"{data_dir}/processed/tf_dataset/{task}_batched/{name}"))
     
     return tuple(res)
