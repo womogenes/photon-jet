@@ -22,20 +22,22 @@ clouds = np.load(f"{data_dir}/processed/{particle_name}_cloud.npy")
 print("Loading model...")
 full_model = tf.keras.models.load_model(f"{model_dir}/{task_name}_pfn")
 
-cut_layers = ["F_0", "output"]
+cut_layers = ["F_7"]
 for layer in cut_layers:
-    print(f"Cutting at layer {layer} and computing hidden units...")
+    print(f"Cutting at layer {layer} and computing its outputs...")
     tf.keras.backend.clear_session()
     model = tf.keras.models.Model(
         inputs=full_model.input,
-        outputs=full_model.get_layer("F_0").input
+        outputs=full_model.get_layer("Sigma").output
     )
-    inputs = model.predict(clouds, batch_size=1000)
-    print(f"  {layer} inputs have shape {inputs.shape}.")
-    os.makedirs(f"./{task_name}_{layer}_inputs", exist_ok=True)
-    save_path = f"./{task_name}_{layer}_inputs/{particle_name}.npz"
+    outputs = model.predict(clouds, batch_size=1000)
+    print(f"  {layer} outputs have shape {outputs.shape}.")
+    
+    save_dir = f"pfn_layer_outputs/{task_name}_{layer}_outputs"
+    os.makedirs(save_dir, exist_ok=True)
+    save_path = f"{save_dir}/{particle_name}.npz"
     print(f"  Saving to {save_path}...")
-    np.save(save_path, inputs)
+    np.save(save_path, outputs)
     
     print()
     
@@ -55,8 +57,7 @@ _________________________________________________________________
  Phi_5 (TimeDistributed)     (None, 960, 128)          16512     
  Phi_6 (TimeDistributed)     (None, 960, 128)          16512     
  Phi_7 (TimeDistributed)     (None, 960, 128)          16512     
- tf.math.reduce_sum (TFOpLa  (None, 128)               0         
- mbda)                                                           
+ Sigma (TFOpLa               (None, 128)               0         
  F_0 (Dense)                 (None, 256)               33024     
  F_1 (Dense)                 (None, 256)               65792     
  F_2 (Dense)                 (None, 256)               65792     
