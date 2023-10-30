@@ -21,7 +21,7 @@ from utils import model_dir, output_dir
 from data import get_data
 
 def test_model(model, test_data):
-    X_test = test_dataset.map(lambda x, y: x)
+    X_test = test_data.map(lambda x, y: x)
     Y_test = np.concatenate(list(test_data.map(lambda x, y: y).as_numpy_iterator()))
     
     preds = model.predict(X_test)
