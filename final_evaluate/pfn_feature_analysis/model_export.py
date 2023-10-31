@@ -32,7 +32,7 @@ for layer in cut_layers:
     tf.keras.backend.clear_session()
     model = tf.keras.models.Model(
         inputs=full_model.input,
-        outputs=full_model.get_layer("Sigma").output
+        outputs=full_model.get_layer(layer).output
     )
     outputs = model.predict(clouds, batch_size=1000)
     print(f"  {layer} outputs have shape {outputs.shape}.")
