@@ -11,8 +11,8 @@ print("Importing other things...")
 import numpy as np
 from utils import data_dir, model_dir
 
-task_name = "scalar1"
-cut_layers = ["Sigma"]
+task_name = "axion2"
+cut_layers = ["F_7"]
 
 ## LOAD DATA
 particles = ["pi0", "gamma", task_name]
