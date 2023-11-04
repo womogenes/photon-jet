@@ -99,11 +99,11 @@ if __name__ == "__main__":
     
     print(f"Training model...")
     hist = [
-        #train_iteration(model, data, lr=2e-6, epochs=6),
-        #train_iteration(model, data, lr=1e-6, epochs=6),
-        #train_iteration(model, data, lr=5e-4, epochs=6),
-        #train_iteration(model, data, lr=2e-4, epochs=6),
-        #train_iteration(model, data, lr=1e-4, epochs=6)
+        train_iteration(model, data, lr=2e-4, epochs=15),
+        train_iteration(model, data, lr=1e-4, epochs=15),
+        train_iteration(model, data, lr=2e-5, epochs=15),
+        train_iteration(model, data, lr=5e-6, epochs=10),
+        train_iteration(model, data, lr=2e-6, epochs=10)
     ]
     
     # Save these training logs somewhere
