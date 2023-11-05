@@ -11,8 +11,8 @@ print("Importing other things...")
 import numpy as np
 from utils import data_dir, model_dir
 
-task_name = "scalar1"
-cut_layers = ["Sigma"]
+task_name = "axion2"
+cut_layers = ["F_7"]
 
 ## LOAD DATA
 particles = ["pi0", "gamma", task_name]
@@ -32,7 +32,7 @@ for layer in cut_layers:
     tf.keras.backend.clear_session()
     model = tf.keras.models.Model(
         inputs=full_model.input,
-        outputs=full_model.get_layer("Sigma").output
+        outputs=full_model.get_layer(layer).output
     )
     outputs = model.predict(clouds, batch_size=1000)
     print(f"  {layer} outputs have shape {outputs.shape}.")
