@@ -1,6 +1,6 @@
 # Point cloud-based models for photon jet classification
 
-This repository contains source code for a ParticleFlow model the paper ["Probing highly collimated photon-jets with deep learning."](https://arxiv.org/abs/2203.16703) In short, we're trying to discriminate the decay signatures (signals) of various new particle decay patterns (of scalars and pseudoscalars) from background signals (of photons and pions). There are three different three-class classification tasks here:
+This repository contains source code for a Particle Flow Network for discriminating the decay signatures (signals) of various new particle decay patterns (of scalars and pseudoscalars) from background signals (of photons and pions). There are three different three-class classification tasks here:
 1. Discriminate between $\pi^0$, $\gamma$, and $s\rightarrow \pi^0\pi^0$
 2. Discriminate between $\pi^0$, $\gamma$, and $a\rightarrow \gamma\gamma$
 3. Discriminate between $\pi^0$, $\gamma$, and $a\rightarrow 3\pi^0$
