@@ -1,8 +1,17 @@
 # Export the first few layers of a model
-import os
-os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
+
 import sys
 sys.path.append("../..")
+
+print(f"Arguments: {sys.argv}")
+if len(sys.argv) < 3:
+    print(f"Usage: python model_export.py <model_name, e.g. axion2> <cut_layer, e.g. Sigma>")
+    exit()
+task_name = sys.argv[1]
+cut_layers = [sys.argv[2]]
+
+import os
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 
 print("Importing tensorflow...")
 import tensorflow as tf
@@ -10,9 +19,6 @@ import tensorflow as tf
 print("Importing other things...")
 import numpy as np
 from utils import data_dir, model_dir
-
-task_name = "axion2"
-cut_layers = ["F_7"]
 
 ## LOAD DATA
 particles = ["pi0", "gamma", task_name]
