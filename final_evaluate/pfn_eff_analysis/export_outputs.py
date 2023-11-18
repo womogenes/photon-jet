@@ -15,6 +15,10 @@ import tensorflow.keras as keras
 
 from utils import data_dir, model_dir
 
+if len(sys.argv) < 1:
+    print(f"Usage: python export_outputs.py <task, e.g. \"scalar1\"")
+    exit(0)
+task = sys.argv[1]
 
 clouds = {}
 models = {}
@@ -22,18 +26,16 @@ models = {}
 def export_outputs(task, particle):
     if not particle in clouds:
         print(f"  Loading {particle} cloud...")
-        clouds[particle] = np.load(f"{data_dir}/processed/{particle}_cloud.npy")
+        clouds[particle] = np.load(f"{data_dir}/processed/{particle}_cloud.npy")[::1]
     if not task in models:
         print(f"  Loading {task} PFN...")
         models[task] = keras.models.load_model(f"{model_dir}/{task}_pfn")
 
     return models[task].predict(clouds[particle])
 
-
-for task in ["scalar1", "axion1", "axion2"]:
-    print(f"=== Exporting outputs for {task} task...")
-    os.makedirs(f"./{task}_outputs", exist_ok=True)
-    for particle in ["pi0", "gamma", task]:
-        print(f"  Predicting on {particle} jets...")
-        outputs = export_outputs(task, particle)
-        np.save(f"./{task}_outputs/{particle}.npy", outputs)
+print(f"=== Exporting outputs for {task} task...")
+os.makedirs(f"./{task}_outputs", exist_ok=True)
+for particle in ["pi0", "gamma", task]:
+    print(f"  Predicting on {particle} jets...")
+    outputs = export_outputs(task, particle)
+    np.save(f"./{task}_outputs/{particle}.npy", outputs)
