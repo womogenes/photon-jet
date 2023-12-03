@@ -44,7 +44,7 @@ def readEff(filename, x, y, xerr, yerr):
 
 # tag="axion1_1GeV"
 tag="axion2_1GeV"
-# tag="scalar1_1GeV"
+# tag = "scalar1_1GeV"
 
 sigLabel = "";
 bg0Label = "$\gamma$"
@@ -58,7 +58,7 @@ elif "axion2" in tag:
     sigLabel = "$a \\rightarrow 3\pi^{0}$"
     particle ="axion2"
 elif "scalar1" in tag:
-    sigLabel = "$s \\rightarrow \pi^{0}\pi^{0}$"
+    sigLabel = "$h_2 \\rightarrow \pi^{0}\pi^{0}$"
     particle ="scalar1"
 
 if "1GeV" in tag:
@@ -123,7 +123,7 @@ ax0 = ax[0]
 #https://matplotlib.org/stable/users/prev_whats_new/dflt_style_changes.html
 ax0.errorbar(x_CNN[0], y_CNN[0], xerr=xerr_CNN[0], yerr=yerr_CNN[0], label="CNN", marker='o', color = 'C1', linestyle='none')
 ax0.errorbar(x_PFN[0], y_PFN[0], xerr=xerr_PFN[0], yerr=yerr_PFN[0], label="PFN", marker='s', color = 'C2', linestyle='none')
-# ax0.errorbar(x_BDT[0], y_BDT[0], xerr=xerr_BDT[0], yerr=yerr_BDT[0], label="BDT", marker='*', color = 'C0', linestyle='none')
+ax0.errorbar(x_BDT[0], y_BDT[0], xerr=xerr_BDT[0], yerr=yerr_BDT[0], label="BDT", marker='*', color = 'C0', linestyle='none')
 #ax0.set_xlabel('$E [GeV]$')
 ax0.set_ylabel(sigLabel + ' efficiency')
 ax0.legend()
@@ -131,7 +131,7 @@ ax0.legend()
 ax1 = ax[1]
 ax1.errorbar(x_CNN[1], y_CNN[1], xerr=xerr_CNN[1], yerr=yerr_CNN[1], label="CNN", marker='o', color = 'C1', linestyle='none')
 ax1.errorbar(x_PFN[1], y_PFN[1], xerr=xerr_PFN[1], yerr=yerr_PFN[1], label="PFN", marker='s', color = 'C2', linestyle='none')
-# ax1.errorbar(x_BDT[1], y_BDT[1], xerr=xerr_BDT[1], yerr=yerr_BDT[1], label="BDT", marker='*', color = 'C0', linestyle='none')
+ax1.errorbar(x_BDT[1], y_BDT[1], xerr=xerr_BDT[1], yerr=yerr_BDT[1], label="BDT", marker='*', color = 'C0', linestyle='none')
 ax1.set_ylabel(bg0Label+ ' mis-tag rate')
 #ax1.set_xlabel('$E [GeV]$')
 #ax1.set_ylabel('Efficiency')
@@ -140,7 +140,7 @@ ax1.set_ylabel(bg0Label+ ' mis-tag rate')
 ax2 = ax[2]
 ax2.errorbar(x_CNN[2], y_CNN[2], xerr=xerr_CNN[2], yerr=yerr_CNN[2], label="CNN", marker='o', color = 'C1', linestyle='none')
 ax2.errorbar(x_PFN[2], y_PFN[2], xerr=xerr_PFN[2], yerr=yerr_PFN[2], label="PFN", marker='s', color = 'C2', linestyle='none')
-# ax2.errorbar(x_BDT[2], y_BDT[2], xerr=xerr_BDT[2], yerr=yerr_BDT[2], label="BDT", marker='*', color = 'C0', linestyle='none')
+ax2.errorbar(x_BDT[2], y_BDT[2], xerr=xerr_BDT[2], yerr=yerr_BDT[2], label="BDT", marker='*', color = 'C0', linestyle='none')
 ax2.set_ylabel(bg1Label + ' mis-tag rate')
 ax2.set_xlabel('$E [GeV]$')
 #ax2.set_ylabel('Efficiency')
