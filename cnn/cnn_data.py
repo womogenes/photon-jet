@@ -10,7 +10,7 @@ with open("../config.yaml") as fin:
     config = yaml.safe_load(fin)
     data_dir = config["data_dir"]
 
-def load_data(task_name):
+def load_data(task_name, get_all=False):
     def _load_data(particle, datafile):
         print('load_data from datafile', datafile)
         d = h5py.File(datafile, 'r')
@@ -59,27 +59,34 @@ def load_data(task_name):
         energy,
         sizes,
     ) = array
+
+    if get_all:
+        return (first, second), y
     
     # Shuffle everything around with a given random seed
     N = first.shape[0] // 3
     
-    labels = y    
-    rng = np.random.default_rng(2)
-    perm = np.random.permutation(3 * N)
-    n_train = round(0.7 * perm.shape[0])
-    n_test = 3 * N - n_train
+    labels = y
 
-    print(f"rng={rng}, perm={perm}, n_train={n_train}, n_test={n_test}")
-    first = first[perm]
-    second = second[perm]
-    labels = labels[perm]
+    if not get_all:
+        # Shuffle the jets and select 70% for training        
+        n_train = round(0.7 * perm.shape[0]) // 10
+        n_test = (3 * N - n_train) // 10
+        rng = np.random.default_rng(2)
+        perm = np.random.permutation(3 * N)
+        first = first[perm]
+        second = second[perm]
+        labels = labels[perm]
+    else:
+        n_train = N * 3
+        n_test = 0
     
     # ~2 sec
     X_train = (first[:n_train], second[:n_train])
     Y_train = labels[:n_train]
     
-    X_test = (first[n_train:], second[n_train:])
-    Y_test = labels[n_train:]
+    X_test = (first[n_train:(n_train + n_test)], second[n_train:(n_train + n_test)])
+    Y_test = labels[n_train:(n_train + n_test)]
     
     return X_train, Y_train, X_test, Y_test
 
