@@ -13,7 +13,7 @@ import contextlib
 import os
 import sys
 
-
+# See documentation for https://www.tensorflow.org/api_docs/python/tf/data/Dataset
 def get_data(task, verbose=False):
     datasets = ["train", "test"]
     res = []

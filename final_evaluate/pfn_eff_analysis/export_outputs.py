@@ -1,7 +1,7 @@
 """
 Export all PFN outputs to .npy files.
-    Each file will contain an array of shape (300000,)
-    where entries are 0, 1, or 2.
+    Each file will contain an array of shape (90000,)
+    where entries are 0, 1, or 2. (Only test jets are used.)
     2 means signal, 0 (pion) and 1 (photon) mean background.
 """
 
@@ -13,29 +13,26 @@ import numpy as np
 import tensorflow as tf
 import tensorflow.keras as keras
 
+from tqdm import tqdm
+
 from utils import data_dir, model_dir
 
-if len(sys.argv) < 1:
-    print(f"Usage: python export_outputs.py <task, e.g. \"scalar1\"")
-    exit(0)
-task = sys.argv[1]
+def export_outputs(task):
+    print(f"=== Exporting outputs for {task} task... ===")
+    
+    # Load the PFN
+    print("  Loading model...")
+    model = keras.models.load_model(f"{model_dir}/{task}_pfn")
+    print("  Loading data...")
+    test_data = tf.data.Dataset.load(f"{data_dir}/processed/tf_dataset/{task}_batched/test")
 
-clouds = {}
-models = {}
+    out_raw = model.predict(test_data, batch_size=128)
+    y_true = np.argmax(np.vstack([y for x, y in tqdm(test_data)]), axis=1)
 
-def export_outputs(task, particle):
-    if not particle in clouds:
-        print(f"  Loading {particle} cloud...")
-        clouds[particle] = np.load(f"{data_dir}/processed/{particle}_cloud.npy")[::1]
-    if not task in models:
-        print(f"  Loading {task} PFN...")
-        models[task] = keras.models.load_model(f"{model_dir}/{task}_pfn")
+    save_path = f"{task}_outputs.npz"
+    print(f"  Saving to {save_path}...")
+    np.savez(save_path, out_raw=out_raw, y_true=y_true)
+    print()
 
-    return models[task].predict(clouds[particle])
-
-print(f"=== Exporting outputs for {task} task...")
-os.makedirs(f"./{task}_outputs", exist_ok=True)
-for particle in ["pi0", "gamma", task]:
-    print(f"  Predicting on {particle} jets...")
-    outputs = export_outputs(task, particle)
-    np.save(f"./{task}_outputs/{particle}.npy", outputs)
+for task in ["scalar1", "axion1", "axion2"]:
+    export_outputs(task)

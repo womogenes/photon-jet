@@ -64,6 +64,8 @@ Run `preprocessing.py`. This will convert the four-layer images in the `.h5` fil
 - 960 is the number of particles in each cloud
 - 4 is the number of features per point (currently $\eta$, $\phi$, energy, and layer number)
 
+Then run `data_tf_export.ipynb`, which will convert all the `.npy` files into Tensorflow datasets. These will live in `<data_dir>/processed/tf_dataset`. This makes it easier to train/test the PFNs because data comes pre-batched.
+
 ### Training the model
 
 Run
