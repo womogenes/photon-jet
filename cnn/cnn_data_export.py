@@ -4,13 +4,18 @@ import os
 import numpy as np
 import h5py
 from h5py import File as HDF5File
+import tensorflow as tf
+import pickle
 
 import yaml
 with open("../config.yaml") as fin:
     config = yaml.safe_load(fin)
     data_dir = config["data_dir"]
 
-def load_data(task_name, get_all=False):
+def export_data(task_name):
+    """
+    Export CNN data with a train/test split.
+    """
     def _load_data(particle, datafile):
         print('load_data from datafile', datafile)
         d = h5py.File(datafile, 'r')
@@ -44,29 +49,24 @@ def load_data(task_name, get_all=False):
         four,
         y,
     ) = array
-
-    if get_all:
-        return (first, second), y
     
     # Shuffle everything around with a given random seed
     N = first.shape[0] // 3
     
     labels = y
 
-    if not get_all:
-        rng = np.random.default_rng(2)
-        perm = np.random.permutation(3 * N)
-        # Shuffle the jets and select 70% for training
-        n_train = round(0.7 * perm.shape[0]) // 10
-        n_test = (3 * N - n_train) // 10
-        first = first[perm]
-        second = second[perm]
-        third = third[perm]
-        four = four[perm]
-        labels = labels[perm]
-    else:
-        n_train = N * 3
-        n_test = 0
+    rng = np.random.default_rng(2)
+    perm = np.random.permutation(3 * N)
+    
+    # Shuffle the jets and select 70% for training
+    n_train = round(0.7 * perm.shape[0]) // 10
+    n_test = (3 * N - n_train) // 10
+    
+    first = first[perm]
+    second = second[perm]
+    third = third[perm]
+    four = four[perm]
+    labels = labels[perm]
     
     # ~2 sec
     X_train = (
@@ -84,9 +84,20 @@ def load_data(task_name, get_all=False):
         four[n_train:(n_train + n_test)],
     )
     Y_test = labels[n_train:(n_train + n_test)]
-    
-    return X_train, Y_train, X_test, Y_test
+
+    os.makedirs(f"{data_dir}/processed/cnn", exist_ok=True)
+    with open(f"{data_dir}/processed/cnn/{task_name}_X_train.pkl", "wb") as fout:
+        pickle.dump(X_train, fout)
+    with open(f"{data_dir}/processed/cnn/{task_name}_Y_train.pkl", "wb") as fout:
+        pickle.dump(Y_train, fout)
+    with open(f"{data_dir}/processed/cnn/{task_name}_X_test.pkl", "wb") as fout:
+        pickle.dump(X_test, fout)
+    with open(f"{data_dir}/processed/cnn/{task_name}_Y_test.pkl", "wb") as fout:
+        pickle.dump(Y_test, fout)
 
 
 if __name__ == "__main__":
-    data = load_data("scalar1")
+    for task_name in ["scalar1", "axion1", "axion2"]:
+        print(f"Exporting {task_name}...")
+        export_data(task_name)
+        print()
