@@ -17,7 +17,7 @@ from matplotlib import pyplot as plt
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2" # Make tensorflow quieter
 
 from tensorflow import keras
-from utils import model_dir, output_dir
+from utils import model_dir, output_dir, data_dir
 from data import get_data
 
 def test_model(model, test_data):

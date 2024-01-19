@@ -59,8 +59,8 @@ def export_data(task_name):
     perm = np.random.permutation(3 * N)
     
     # Shuffle the jets and select 70% for training
-    n_train = round(0.7 * perm.shape[0]) // 10
-    n_test = (3 * N - n_train) // 10
+    n_train = round(0.7 * perm.shape[0])
+    n_test = (3 * N - n_train)
     
     first = first[perm]
     second = second[perm]
