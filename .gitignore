@@ -4,6 +4,7 @@ __pycache__/
 .vscode/
 final_evaluate/*_results/
 final_evaluate/*.zip
+bdt/gbdt_results_9var
 
 config.yaml
 .nfs*
