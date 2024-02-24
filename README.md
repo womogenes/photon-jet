@@ -19,7 +19,7 @@ conda install --file requirements.txt
 
 ### Data preparation
 
-Two datasets are required: one contains raw ECAL images, and the other contains processed BDT variables. These datasets will be made available on CERNBox soon.
+Two datasets are required: one contains raw ECAL images, and the other contains processed BDT variables. They are available on the CERN EOS at `/eos/user/w/wifeng/photon-jet/data`. Here is a public link: <https://cernbox.cern.ch/s/qe4mYaSEkKJwWa5>
 
 Modify `config.yaml` to point to the correct data paths:
 ```yaml
