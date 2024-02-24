@@ -2,7 +2,7 @@
 
 import matplotlib.pyplot as plt
 import numpy as np
-from utils import output_dir
+from config import OUTPUT_DIR
 
 def plot_cm(cm, labels, save_path):
     matrix = np.array(cm)[::-1,::-1]
@@ -48,25 +48,4 @@ def plot_cm(cm, labels, save_path):
     ax.spines["left"].set_visible(False)
 
     plt.savefig(save_path, format="pdf", bbox_inches="tight")
-
-
-if __name__ == "__main__":
-    # We need to redo a CNN confusion matrix because of the s -> h_2 renaming
-    plot_cm(
-        [[0.979, 0.02, 0.001], [0.005, 0.995, 0.0], [0.006, 0.0, 0.993]],
-        [r"$\pi^0$", r"$\gamma$", r"$h_2\rightarrow\pi^0\pi^0$"],
-        f"{output_dir}/scalar1_CNN_ConfusionMatrix.pdf"
-    )
-    plot_cm(
-        [[0.970, 0.013, 0.017], [0.015, 0.985, 0.000], [0.008, 0.000, 0.992]],
-        [r"$\pi^0$", r"$\gamma$", r"$a\rightarrow\gamma\gamma$"],
-        f"{output_dir}/axion1_CNN_ConfusionMatrix.pdf"
-    )
-    plot_cm(
-        [[0.969, 0.031, 0.000], [0.002, 0.998, 0.000], [0.002, 0.000, 0.998]],
-        [r"$\pi^0$", r"$\gamma$", r"$a\rightarrow 3\pi^0$"],
-        f"{output_dir}/axion2_CNN_ConfusionMatrix.pdf"
-    )
-
-    
 

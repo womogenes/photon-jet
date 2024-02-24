@@ -7,10 +7,10 @@ from h5py import File as HDF5File
 import tensorflow as tf
 import pickle
 
-import yaml
-with open("../config.yaml") as fin:
-    config = yaml.safe_load(fin)
-    data_dir = config["data_dir"]
+# Allow importing from one level higher
+import os
+import sys; sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from config import DATA_DIR
 
 def export_data(task_name):
     """
@@ -33,7 +33,7 @@ def export_data(task_name):
             y,
         )
     
-    s = [os.path.join(data_dir, p) for p in [
+    s = [os.path.join(DATA_DIR, p) for p in [
         'h5/pi0_40-250GeV_100k.h5',
         'h5/gamma_40-250GeV_100k.h5',
         f"h5/{task_name}_40-250GeV_100k.h5",
@@ -85,14 +85,14 @@ def export_data(task_name):
     )
     Y_test = labels[n_train:(n_train + n_test)]
 
-    os.makedirs(f"{data_dir}/processed/cnn", exist_ok=True)
-    with open(f"{data_dir}/processed/cnn/{task_name}_X_train.pkl", "wb") as fout:
+    os.makedirs(f"{DATA_DIR}/processed/cnn", exist_ok=True)
+    with open(f"{DATA_DIR}/processed/cnn/{task_name}_X_train.pkl", "wb") as fout:
         pickle.dump(X_train, fout)
-    with open(f"{data_dir}/processed/cnn/{task_name}_Y_train.pkl", "wb") as fout:
+    with open(f"{DATA_DIR}/processed/cnn/{task_name}_Y_train.pkl", "wb") as fout:
         pickle.dump(Y_train, fout)
-    with open(f"{data_dir}/processed/cnn/{task_name}_X_test.pkl", "wb") as fout:
+    with open(f"{DATA_DIR}/processed/cnn/{task_name}_X_test.pkl", "wb") as fout:
         pickle.dump(X_test, fout)
-    with open(f"{data_dir}/processed/cnn/{task_name}_Y_test.pkl", "wb") as fout:
+    with open(f"{DATA_DIR}/processed/cnn/{task_name}_Y_test.pkl", "wb") as fout:
         pickle.dump(Y_test, fout)
 
 
