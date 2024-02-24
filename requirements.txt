@@ -1,1 +1,9 @@
+numpy
+scipy
+joblib
+tqdm
+matplotlib
+h5py
+tensorflow
+scikit-learn
 seaborn<0.14.0

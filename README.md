@@ -4,11 +4,11 @@ This repository contains the source code for the paper ["Detecting highly collim
 
 ## Project structure
 
-This readme walks through all steps needed to 
+This readme walks through all steps needed to replicate the figures in the paper.
 
-There are three sub-directories for each of our three model architectures: `bdt/` for Boosted Decision Trees, `cnn/` for Convolutional Neural Networks, and `pfn/` for Particle Flow Networks. Within each directory, there are scripts to train and evaluate the corresponding model, as well as scripts to create relevant plots.
+This repository contains three sub-directories for each of our three model architectures: `bdt/` for Boosted Decision Trees, `cnn/` for Convolutional Neural Networks, and `pfn/` for Particle Flow Networks. Within each directory, there are scripts to train and evaluate the corresponding model, as well as scripts to create relevant plots.
 
-We also have cumulative plots that evaluate multiple models; the scripts to generate them are contained in the root directory.
+We also have cumulative plots that evaluate multiple models; the scripts to generate them are contained in `final_plots/`.
 
 ## Getting started
 
