@@ -45,6 +45,24 @@ def evaluate_cnn(task_name):
     )
     test_accuracy = np.mean(Y_pred == Y_test)
     print(f"Mean test accuracy for {task_name}: {test_accuracy:.5f}")
+
+    # Create file with efficiencies
+    E = np.sum([np.sum(layer / 1000, axis=(1, 2, 3)) for layer in X_test], axis=0)  # Aggregate across phi, eta axes
+    
+    with open(f"{OUTPUT_DIR}/cnn_results/{task_name}_eff_CNN_1GeV.txt", "w") as fout:
+        fout.write("EnergyRangeLow, EnergyRangeUp, Eff, EffErrLow, EffErrUp\n")
+        for e_range_low in range(40, 250, 21):
+            e_range_up = e_range_low + 21
+            # Get indices of jets that fall into this energy bin
+            jet_idxs = np.where((e_range_low <= E) & (E < e_range_up))[0]
+            
+            # Calculate efficiency
+            # Number of signal jets
+            n = np.sum(Y_test[jet_idxs] == 2)
+            # Number of signal jets identified as signal
+            k = np.sum(Y_pred[jet_idxs][np.where(Y_test[jet_idxs] == 2)] == 2)
+            
+            fout.write(f"{e_range_low:.1f}, {e_range_up:.1f}, {k / n:.5f}, 0.0, 0.0\n")
     
     return test_accuracy, cm
 
