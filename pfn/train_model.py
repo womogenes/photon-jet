@@ -68,8 +68,8 @@ if __name__ == "__main__":
     # Get the data
     print(f"Fetching data...")
     
-    train_data = tf.data.Dataset.load(f"{DATA_DIR}/processed/tf_dataset/{args.task}_batched/train")
-    test_data = tf.data.Dataset.load(f"{DATA_DIR}/processed/tf_dataset/{args.task}_batched/test")
+    train_data = tf.data.Dataset.load(f"{DATA_DIR}/processed/pfn/tf_dataset/{args.task}_batched/train")
+    test_data = tf.data.Dataset.load(f"{DATA_DIR}/processed/pfn/tf_dataset/{args.task}_batched/test")
     data = (train_data, test_data)
 
     #print(f"train_data size: {len(train_data)}")
